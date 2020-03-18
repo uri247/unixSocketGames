@@ -1,8 +1,5 @@
 #include <iostream>
-#include <string>
 #include <cstring>
-#include <sstream>
-#include <cstdio>
 #include <sys/socket.h>
 #include <sys/un.h>
 
@@ -16,22 +13,7 @@ public:
 };
 
 
-class quick_fmt : protected std::ostringstream
-{
-public:
-    quick_fmt() : std::ostringstream{}
-    { }
-
-    template <typename ty>
-    quick_fmt& operator<<(ty o) {
-        std::ostringstream::operator<<(o);
-        return *this;
-    }
-    operator std::string() { return this->str(); } // NOLINT(google-explicit-constructor)
-};
-
-
-int doit()
+void doit()
 {
     int s = socket(AF_UNIX, SOCK_STREAM, 0);
     if (s == -1) {
@@ -63,42 +45,35 @@ int doit()
         std::cout << "Connected ..." << std::endl;
 
         while( true ) {
-            char* buff[100];
-            int n = recv(s2, buff, sizeof(buff), 0);
+            char buff[120];
+            int n = recv(s2, buff, sizeof(buff) - 20, 0);
             if( n <= 0 ) {
                 if( n < 0 ) {
                     throw system_error();
                 }
                 break;
             }
+            buff[n] = 0x00;
+            std::cout << "received: " << buff << std::endl;
 
             n = send(s2, buff, n, 0);
             if( n < 0 ) {
                 throw system_error();
             }
         }
-
     }
-
-
-    return 0;
-}
-
-
-void echo(std::string s)
-{
-    std::cout << s << std::endl;
 }
 
 
 int main() {
     try {
-        return doit();
+        doit();
     }
     catch( system_error& x ) {
         std::cout <<
             "Caught system_error exception: " << x.code() << std::endl <<
             "meaning: " << x.what() << std::endl;
     }
+    return 0;
 }
 
