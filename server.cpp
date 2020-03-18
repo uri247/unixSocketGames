@@ -2,15 +2,7 @@
 #include <cstring>
 #include <sys/socket.h>
 #include <sys/un.h>
-
-#define SOCKET_FILENAME     "dump.sock"
-#define LISTEN_BACKLOG      5
-
-class system_error : public std::system_error
-{
-public:
-    system_error() :std::system_error() { }
-};
+#include "socket_games.h"
 
 
 void doit()

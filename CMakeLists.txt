@@ -5,5 +5,6 @@ set(VERSION_MAJOR 0)
 set(VERSION_MINOR 1)
 set(VERSION_REV 0)
 
-add_executable(server server.cpp)
+add_executable(server server.cpp socket_games.h)
 
+add_executable(client client.cpp socket_games.h)
