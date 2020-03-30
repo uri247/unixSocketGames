@@ -43,6 +43,7 @@ void doit()
                 if( n < 0 ) {
                     throw system_error();
                 }
+                std::cout << "client disconnected" << std::endl;
                 break;
             }
             buff[n] = 0x00;
@@ -68,4 +69,3 @@ int main() {
     }
     return 0;
 }
-
